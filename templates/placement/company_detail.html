@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h4 class="mb-3">{{ company.name }}</h4>
+    <div class="mb-3"><strong>Type:</strong> {{ company.company_type }}</div>
+    <div class="mb-3"><strong>Deadline:</strong> {{ company.application_deadline }}</div>
+    <div class="mb-3"><strong>Stipend:</strong> {{ company.stipend }}</div>
+    <div class="mb-3"><strong>Package:</strong> {{ company.package }}</div>
+    <div class="mb-3"><strong>Address:</strong> {{ company.address }}</div>
+    <div class="mb-3"><strong>Skills:</strong> {{ company.required_skills }}</div>
+    <div class="mb-3"><strong>Position:</strong> {{ company.position_details }}</div>
+    <div class="mb-3"><strong>Website:</strong> <a href="{{ company.website_link }}" target="_blank">{{ company.website_link }}</a></div>
+    <div class="mb-3"><strong>LinkedIn:</strong> <a href="{{ company.linkedin_profile }}" target="_blank">{{ company.linkedin_profile }}</a></div>
+    <div class="mb-3"><strong>PDF:</strong> <a href="{{ company.pdf_link }}" target="_blank">View PDF</a></div>
+    <div class="mb-3"><strong>Owner:</strong> {{ company.owner_details }}</div>
+    <div class="mb-3"><strong>About:</strong> {{ company.company_work_details }}</div>
+    <div class="mb-3"><strong>Extra:</strong> {{ company.extra_details }}</div>
+    {% if company.interview_date %}
+    <div class="alert alert-warning fw-bold fs-5">
+        📅 Interview Date: {{ company.interview_date|date:"d M Y" }}
+    </div>
+    {% else %}
+        <div class="text-muted mb-3">Interview date not announced yet.</div>
+    {% endif %}
+
+
+    {% if already_applied %}
+        <button class="btn btn-danger mt-3" disabled>Already Applied</button>
+    {% else %}
+        <a href="{% url 'apply_to_company' company.pk %}" class="btn btn-success mt-3">Apply</a>
+    {% endif %}
+
+    <a href="{% url 'company_list' %}" class="btn btn-secondary mt-3 ms-2">Back</a>
+</div>
+{% endblock %}

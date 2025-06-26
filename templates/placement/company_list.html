@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-4">All Companies</h4>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-6">
+        <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ query }}">
+    </div>
+    <div class="col-6 col-md-3">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+    <div class="col-6 col-md-3">
+        <a href="{% url 'company_list' %}" class="btn btn-outline-secondary w-100">Reset</a>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for company in companies %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ company.name }}</h5>
+                <p class="card-text">
+                    <strong>Type:</strong> {{ company.company_type }}<br>
+                    <strong>Deadline:</strong> {{ company.application_deadline }}<br>
+                    <strong>Stipend:</strong> {{ company.stipend }}<br>
+                    <strong>Package:</strong> {{ company.package }} <br>                    
+                    <strong>Positions:</strong> {{ company.position_details }}<br>         
+                    {% if company.interview_date %}
+<div class="alert alert-warning fw-bold fs-5">
+    📅 Interview Date: {{ company.interview_date|date:"d M Y" }}
+</div>
+{% else %}
+<div class="text-muted mb-3">Interview date not announced yet.</div>
+{% endif %}
+           
+                </p>
+                <a href="{% url 'company_detail' company.pk %}" class="btn btn-outline-primary btn-sm">See More</a>
+                {% if company.id in applied_company_ids %}
+                    <button class="btn btn-danger btn-sm" disabled>Applied</button>
+                {% else %}
+                    <a href="{% url 'apply_to_company' company.pk %}" class="btn btn-primary btn-sm">Apply</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% empty %}
+    <p>No companies available.</p>
+    {% endfor %}
+        <a href="{% url 'export_companies_excel' %}?q={{ query }}" class="btn btn-success mb-3 float-end">
+    ⬇️ Export Companies to Excel
+</a>
+
+</div>
+{% endblock %}

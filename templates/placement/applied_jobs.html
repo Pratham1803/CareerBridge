@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block content %}
+
+<h4 class="mb-4">Companies You Applied To</h4>
+<form method="get" class="row g-3 mb-4 align-items-end">
+  <div class="col-md-6">
+    <input
+      type="text"
+      name="q"
+      value="{{ query }}"
+      class="form-control"
+      placeholder="Search applied companies by name, skill, or location"
+    />
+  </div>
+  <div class="col-md-2 d-grid">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+  <div class="col-md-2 d-grid">
+    <a href="{% url 'applied_jobs' %}" class="btn btn-outline-secondary"
+      >Reset</a
+    >
+  </div>
+</form>
+
+{% if applications %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  {% for app in applications %}
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">{{ app.company.name }}</h5>
+        <p class="card-text">
+          <strong>Type:</strong> {{ app.company.company_type }}<br />
+          <strong>Applied on:</strong> {{ app.applied_at|date:"d M Y" }}<br />
+          <strong>Deadline:</strong> {{ app.company.application_deadline }}<br />
+          <strong>Package:</strong> {{ app.company.package }}
+        </p>
+        {% if app.company.interview_date %}
+        <div class="alert alert-warning fw-bold fs-5">
+          📅 Interview Date: {{ app.company.interview_date|date:"d M Y" }}
+        </div>
+        {% else %}
+        <div class="text-muted mb-3">Interview date not announced yet.</div>
+        {% endif %}
+
+        <a
+          href="{% url 'company_detail' app.company.pk %}"
+          class="btn btn-outline-primary btn-sm"
+          >See Details</a
+        >
+
+        <!-- Withdraw Button -->
+        <form
+          method="post"
+          action="{% url 'withdraw_application' app.id %}"
+          class="d-inline"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('Are you sure you want to withdraw?');"
+          >
+            Withdraw
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<br>
+<a href="{% url 'export_applied_jobs_excel' %}?q={{ query }}" class="btn btn-success mb-3 float-end">
+    ⬇️ Export Applied Companies to Excel
+</a>
+
+{% else %}
+<p>You haven't applied to any companies yet.</p>
+{% endif %} {% endblock %}
