@@ -29,7 +29,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['careerbridge-m3ir.onrender.com', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://careerbridge-m3ir.onrender.com/',    
+    'https://careerbridge-m3ir.onrender.com',    
 ]
 
 # Application definition
