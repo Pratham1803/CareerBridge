@@ -7,14 +7,14 @@
     <div class="mb-3"><strong>Stipend:</strong> {{ company.stipend }}</div>
     <div class="mb-3"><strong>Package:</strong> {{ company.package }}</div>
     <div class="mb-3"><strong>Address:</strong> {{ company.address }}</div>
-    <div class="mb-3"><strong>Skills:</strong> {{ company.required_skills }}</div>
-    <div class="mb-3"><strong>Position:</strong> {{ company.position_details }}</div>
+    <div class="mb-3"><strong>Skills:</strong> <pre> {{ company.required_skills }}</pre> </div>
+    <div class="mb-3"><strong>Position:</strong> <pre> {{ company.position_details }}</pre></div>
     <div class="mb-3"><strong>Website:</strong> <a href="{{ company.website_link }}" target="_blank">{{ company.website_link }}</a></div>
     <div class="mb-3"><strong>LinkedIn:</strong> <a href="{{ company.linkedin_profile }}" target="_blank">{{ company.linkedin_profile }}</a></div>
     <div class="mb-3"><strong>PDF:</strong> <a href="{{ company.pdf_link }}" target="_blank">View PDF</a></div>
     <div class="mb-3"><strong>Owner:</strong> {{ company.owner_details }}</div>
-    <div class="mb-3"><strong>About:</strong> {{ company.company_work_details }}</div>
-    <div class="mb-3"><strong>Extra:</strong> {{ company.extra_details }}</div>
+    <div class="mb-3"><strong>About:</strong> <pre> {{ company.company_work_details }}</pre></div>
+    <div class="mb-3"><strong>Extra:</strong> <pre> {{ company.extra_details }}</pre> </div>
     {% if company.interview_date %}
     <div class="alert alert-warning fw-bold fs-5">
         📅 Interview Date: {{ company.interview_date|date:"d M Y" }}
