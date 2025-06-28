@@ -1,5 +1,141 @@
 {% extends 'base.html' %}
+{% block title %}Dashboard - CareerBridge{% endblock %}
+
 {% block content %}
-    <h2>Welcome, {{ user.username }}!</h2>
-    <p>This is your student dashboard.</p>
+<div class="container">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0" style="background: var(--primary-gradient); color: white;">
+                <div class="card-body text-center py-5">
+                    <div class="floating-element">
+                        <i class="bi bi-speedometer2 display-4 mb-3"></i>
+                        <h1 class="fw-bold mb-2">Welcome back, {{ user.first_name|default:user.username }}!</h1>
+                        <p class="lead mb-0">Your placement journey dashboard</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 text-center h-100" style="background: var(--success-gradient); color: white;">
+                <div class="card-body">
+                    <i class="bi bi-building-check display-4 mb-3"></i>
+                    <h3 class="fw-bold mb-1">0</h3>
+                    <p class="mb-0">Applications Sent</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 text-center h-100" style="background: var(--warning-gradient); color: #333;">
+                <div class="card-body">
+                    <i class="bi bi-calendar-event display-4 mb-3"></i>
+                    <h3 class="fw-bold mb-1">0</h3>
+                    <p class="mb-0">Upcoming Interviews</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 text-center h-100" style="background: var(--secondary-gradient); color: white;">
+                <div class="card-body">
+                    <i class="bi bi-clock-history display-4 mb-3"></i>
+                    <h3 class="fw-bold mb-1">0</h3>
+                    <p class="mb-0">Pending Responses</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 text-center h-100" style="background: var(--primary-gradient); color: white;">
+                <div class="card-body">
+                    <i class="bi bi-trophy display-4 mb-3"></i>
+                    <h3 class="fw-bold mb-1">0</h3>
+                    <p class="mb-0">Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Quick Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning-charge me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <a href="{% url 'company_list' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-search me-2"></i>Browse Companies
+                        </a>
+                        <a href="{% url 'applied_jobs' %}" class="btn btn-outline-success">
+                            <i class="bi bi-briefcase me-2"></i>View Applications
+                        </a>
+                        <a href="{% url 'student_profile' %}" class="btn btn-outline-info">
+                            <i class="bi bi-person me-2"></i>Update Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-activity me-2"></i>Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="bi bi-clock-history display-4 text-muted"></i>
+                        <h5 class="text-muted mt-3">No Recent Activity</h5>
+                        <p class="text-muted">Start applying to companies to see your activity here!</p>
+                        <a href="{% url 'company_list' %}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Apply to Companies
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Deadlines -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Upcoming Deadlines
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="bi bi-calendar-x display-4 text-muted"></i>
+                        <h5 class="text-muted mt-3">No Upcoming Deadlines</h5>
+                        <p class="text-muted">You're all caught up! Keep checking for new opportunities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+</style>
 {% endblock %}

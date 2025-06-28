@@ -1,53 +1,170 @@
 {% extends 'base.html' %}
+{% block title %}Companies - CareerBridge{% endblock %}
+
 {% block content %}
-<h4 class="mb-4">All Companies</h4>
-
-<form method="get" class="row g-2 mb-4">
-    <div class="col-12 col-md-6">
-        <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ query }}">
+<!-- Hero Section -->
+<div class="page-header">
+    <div class="container">
+        <h1 class="display-4 fw-bold floating-element">
+            <i class="bi bi-building-add me-3"></i>
+            Placement Opportunities
+        </h1>
+        <p class="lead">Discover amazing career opportunities from top companies</p>
     </div>
-    <div class="col-6 col-md-3">
-        <button type="submit" class="btn btn-primary w-100">Search</button>
-    </div>
-    <div class="col-6 col-md-3">
-        <a href="{% url 'company_list' %}" class="btn btn-outline-secondary w-100">Reset</a>
-    </div>
-</form>
-
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    {% for company in companies %}
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">{{ company.name }}</h5>
-                <p class="card-text">
-                    <strong>Type:</strong> {{ company.company_type }}<br>
-                    <strong>Deadline:</strong> {{ company.application_deadline }}<br>
-                    <strong>Stipend:</strong> {{ company.stipend }}<br>
-                    <strong>Package:</strong> {{ company.package }} <br>                    
-                    <strong>Positions:</strong> {{ company.position_details }}<br>         
-                    {% if company.interview_date %}
-<div class="alert alert-warning fw-bold fs-5">
-    📅 Interview Date: {{ company.interview_date|date:"d M Y" }}
 </div>
-{% else %}
-<div class="text-muted mb-3">Interview date not announced yet.</div>
-{% endif %}
-           
-                </p>
-                <a href="{% url 'company_detail' company.pk %}" class="btn btn-outline-primary btn-sm">See More</a>
-                {% if company.id in applied_company_ids %}
-                    <button class="btn btn-danger btn-sm" disabled>Applied</button>
-                {% else %}
-                    <a href="{% url 'apply_to_company' company.pk %}" class="btn btn-primary btn-sm">Apply</a>
-                {% endif %}
+
+<div class="container">
+    <!-- Search Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" class="row g-3 align-items-center">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" 
+                                       name="q" 
+                                       class="form-control" 
+                                       placeholder="Search companies, skills, positions..." 
+                                       value="{{ query }}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-search me-1"></i>Search
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{% url 'company_list' %}" class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    {% empty %}
-    <p>No companies available.</p>
-    {% endfor %}
+    <!-- Companies Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for company in companies %}
+        <div class="col">
+            <div class="card h-100 company-card">
+                <div class="card-header" style="background: var(--primary-gradient); color: white;">
+                    <h5 class="card-title mb-0 fw-bold">
+                        <i class="bi bi-building me-2"></i>
+                        {{ company.name }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="company-info mb-3">
+                        <div class="info-item mb-2">
+                            <i class="bi bi-briefcase-fill text-primary me-2"></i>
+                            <small class="text-muted">Type:</small>
+                            <span class="fw-semibold">{{ company.company_type }}</span>
+                        </div>
+                        <div class="info-item mb-2">
+                            <i class="bi bi-calendar-check text-danger me-2"></i>
+                            <small class="text-muted">Deadline:</small>
+                            <span class="fw-semibold">{{ company.application_deadline }}</span>
+                        </div>
+                        <div class="info-item mb-2">
+                            <i class="bi bi-currency-dollar text-success me-2"></i>
+                            <small class="text-muted">Package:</small>
+                            <span class="fw-semibold text-success">{{ company.package }}</span>
+                        </div>
+                        <div class="info-item mb-2">
+                            <i class="bi bi-award text-warning me-2"></i>
+                            <small class="text-muted">Stipend:</small>
+                            <span class="fw-semibold">{{ company.stipend }}</span>
+                        </div>
+                        <div class="info-item mb-2">
+                            <i class="bi bi-person-workspace text-info me-2"></i>
+                            <small class="text-muted">Positions:</small>
+                            <span class="fw-semibold">{{ company.position_details|truncatechars:50 }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if company.interview_date %}
+                        <div class="alert alert-warning mb-3">
+                            <i class="bi bi-calendar-event me-2"></i>
+                            <strong>Interview:</strong> {{ company.interview_date|date:"d M Y" }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-light mb-3">
+                            <i class="bi bi-clock me-2"></i>
+                            <small class="text-muted">Interview date TBA</small>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-light d-flex gap-2">
+                    <a href="{% url 'company_detail' company.pk %}" 
+                       class="btn btn-outline-primary btn-sm flex-grow-1">
+                        <i class="bi bi-eye me-1"></i>View Details
+                    </a>
+                    {% if company.id in applied_company_ids %}
+                        <button class="btn btn-success btn-sm flex-grow-1" disabled>
+                            <i class="bi bi-check-circle me-1"></i>Applied
+                        </button>
+                    {% else %}
+                        <a href="{% url 'apply_to_company' company.pk %}" 
+                           class="btn btn-primary btn-sm flex-grow-1">
+                            <i class="bi bi-send me-1"></i>Apply Now
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="bi bi-building-x display-1 text-muted"></i>
+                <h3 class="text-muted mt-3">No Companies Found</h3>
+                <p class="text-muted">Try adjusting your search criteria or check back later for new opportunities.</p>
+                <a href="{% url 'company_list' %}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left me-1"></i>View All Companies
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.company-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.company-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-item small {
+    min-width: 60px;
+}
+
+.page-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 80px 0;
+    margin-bottom: 50px;
+    text-align: center;
+    border-radius: 0 0 50px 50px;
+}
+</style>
+{% comment %} {% endblock %} {% endcomment %}
         <a href="{% url 'export_companies_excel' %}?q={{ query }}" class="btn btn-success mb-3 float-end">
     ⬇️ Export Companies to Excel
 </a>

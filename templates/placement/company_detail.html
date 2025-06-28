@@ -1,35 +1,218 @@
 {% extends 'base.html' %}
+{% block title %}{{ company.name }} - CareerBridge{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h4 class="mb-3">{{ company.name }}</h4>
-    <div class="mb-3"><strong>Type:</strong> {{ company.company_type }}</div>
-    <div class="mb-3"><strong>Deadline:</strong> {{ company.application_deadline }}</div>
-    <div class="mb-3"><strong>Stipend:</strong> {{ company.stipend }}</div>
-    <div class="mb-3"><strong>Package:</strong> {{ company.package }}</div>
-    <div class="mb-3"><strong>Address:</strong> {{ company.address }}</div>
-    <div class="mb-3"><strong>Skills:</strong> <pre> {{ company.required_skills }}</pre> </div>
-    <div class="mb-3"><strong>Position:</strong> <pre> {{ company.position_details }}</pre></div>
-    <div class="mb-3"><strong>Website:</strong> <a href="{{ company.website_link }}" target="_blank">{{ company.website_link }}</a></div>
-    <div class="mb-3"><strong>LinkedIn:</strong> <a href="{{ company.linkedin_profile }}" target="_blank">{{ company.linkedin_profile }}</a></div>
-    <div class="mb-3"><strong>PDF:</strong> <a href="{{ company.pdf_link }}" target="_blank">View PDF</a></div>
-    <div class="mb-3"><strong>Owner:</strong> {{ company.owner_details }}</div>
-    <div class="mb-3"><strong>About:</strong> <pre> {{ company.company_work_details }}</pre></div>
-    <div class="mb-3"><strong>Extra:</strong> <pre> {{ company.extra_details }}</pre> </div>
-    {% if company.interview_date %}
-    <div class="alert alert-warning fw-bold fs-5">
-        📅 Interview Date: {{ company.interview_date|date:"d M Y" }}
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0" style="background: var(--primary-gradient); color: white;">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-building display-4 mb-3"></i>
+                    <h1 class="fw-bold mb-2">{{ company.name }}</h1>
+                    <p class="lead mb-0">{{ company.company_type }}</p>
+                </div>
+            </div>
+        </div>
     </div>
-    {% else %}
-        <div class="text-muted mb-3">Interview date not announced yet.</div>
-    {% endif %}
 
-
-    {% if already_applied %}
-        <button class="btn btn-danger mt-3" disabled>Already Applied</button>
-    {% else %}
-        <a href="{% url 'apply_to_company' company.pk %}" class="btn btn-success mt-3">Apply</a>
-    {% endif %}
-
-    <a href="{% url 'company_list' %}" class="btn btn-secondary mt-3 ms-2">Back</a>
+    <div class="row">
+        <!-- Main Information -->
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>Company Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Basic Info -->
+                        <div class="col-md-6">
+                            <div class="info-section">
+                                <h6 class="text-primary fw-bold mb-3">
+                                    <i class="bi bi-building-gear me-2"></i>Basic Information
+                                </h6>
+                                <div class="info-item mb-3">
+                                    <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                                    <strong>Address:</strong>
+                                    <span class="ms-2">{{ company.address }}</span>
+                                </div>
+                                <div class="info-item mb-3">
+                                    <i class="bi bi-person-fill text-info me-2"></i>
+                                    <strong>Owner:</strong>
+                                    <span class="ms-2">{{ company.owner_details }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Package Info -->
+                        <div class="col-md-6">
+                            <div class="info-section">
+                                <h6 class="text-success fw-bold mb-3">
+                                    <i class="bi bi-currency-dollar me-2"></i>Package Details
+                                </h6>
+                                <div class="info-item mb-3">
+                                    <i class="bi bi-cash-stack text-success me-2"></i>
+                                    <strong>Package:</strong>
+                                    <span class="ms-2 text-success fw-bold">{{ company.package }}</span>
+                                </div>
+                                <div class="info-item mb-3">
+                                    <i class="bi bi-award text-warning me-2"></i>
+                                    <strong>Stipend:</strong>
+                                    <span class="ms-2">{{ company.stipend }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- About Company -->
+                    <div class="mt-4">
+                        <h6 class="text-primary fw-bold mb-3">
+                            <i class="bi bi-file-text me-2"></i>About Company
+                        </h6>
+                        <div class="bg-light p-3 rounded">
+                            <pre class="mb-0">{{ company.company_work_details }}</pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Required -->
+                    <div class="mt-4">
+                        <h6 class="text-primary fw-bold mb-3">
+                            <i class="bi bi-gear-fill me-2"></i>Required Skills
+                        </h6>
+                        <div class="bg-light p-3 rounded">
+                            <pre class="mb-0">{{ company.required_skills }}</pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Position Details -->
+                    <div class="mt-4">
+                        <h6 class="text-primary fw-bold mb-3">
+                            <i class="bi bi-briefcase-fill me-2"></i>Position Details
+                        </h6>
+                        <div class="bg-light p-3 rounded">
+                            <pre class="mb-0">{{ company.position_details }}</pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Details -->
+                    {% if company.extra_details %}
+                    <div class="mt-4">
+                        <h6 class="text-primary fw-bold mb-3">
+                            <i class="bi bi-plus-circle me-2"></i>Additional Information
+                        </h6>
+                        <div class="bg-light p-3 rounded">
+                            <pre class="mb-0">{{ company.extra_details }}</pre>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Application Status -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Application Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-calendar-x text-danger me-2"></i>
+                        <strong>Deadline:</strong>
+                        <span class="text-danger fw-bold">{{ company.application_deadline }}</span>
+                    </div>
+                    
+                    {% if company.interview_date %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-calendar-event me-2"></i>
+                            <strong>Interview Date:</strong><br>
+                            {{ company.interview_date|date:"d M Y, l" }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-light">
+                            <i class="bi bi-clock me-2"></i>
+                            Interview date will be announced soon
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        {% if already_applied %}
+                            <button class="btn btn-success btn-lg" disabled>
+                                <i class="bi bi-check-circle me-2"></i>Already Applied
+                            </button>
+                        {% else %}
+                            <a href="{% url 'apply_to_company' company.pk %}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-send me-2"></i>Apply Now
+                            </a>
+                        {% endif %}
+                        
+                        <a href="{% url 'company_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Companies
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Links -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-link-45deg me-2"></i>Company Links</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if company.website_link %}
+                            <a href="{{ company.website_link }}" 
+                               target="_blank" 
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-globe me-2"></i>Visit Website
+                            </a>
+                        {% endif %}
+                        
+                        {% if company.linkedin_profile %}
+                            <a href="{{ company.linkedin_profile }}" 
+                               target="_blank" 
+                               class="btn btn-outline-info">
+                                <i class="bi bi-linkedin me-2"></i>LinkedIn Profile
+                            </a>
+                        {% endif %}
+                        
+                        {% if company.pdf_link %}
+                            <a href="{{ company.pdf_link }}" 
+                               target="_blank" 
+                               class="btn btn-outline-danger">
+                                <i class="bi bi-file-pdf me-2"></i>Download PDF
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.info-section {
+    border-left: 4px solid #667eea;
+    padding-left: 15px;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #495057;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+</style>
 {% endblock %}
