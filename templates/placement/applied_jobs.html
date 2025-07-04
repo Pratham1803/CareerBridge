@@ -14,32 +14,52 @@
 </div>
 
 <div class="container">
-    <!-- Search and Export Section -->
+    <!-- Search, Sort and Export Section -->
     <div class="row mb-4">
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
-                    <form method="get" class="row g-3 align-items-center">
-                        <div class="col-md-8">
+                    <form method="get" class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <label for="search" class="form-label fw-semibold">
+                                <i class="bi bi-search me-1"></i>Search Applications
+                            </label>
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-search"></i>
                                 </span>
                                 <input type="text" 
+                                       id="search"
                                        name="q" 
                                        value="{{ query }}" 
                                        class="form-control" 
-                                       placeholder="Search applied companies by name, skill, or location">
+                                       placeholder="Search by company name, skill, or location">
                             </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="sort" class="form-label fw-semibold">
+                                <i class="bi bi-sort-down me-1"></i>Sort By
+                            </label>
+                            <select name="sort" id="sort" class="form-select">
+                                <option value="date_applied" {% if sort_by == 'date_applied' %}selected{% endif %}>
+                                    <i class="bi bi-calendar-plus"></i> Application Date (Latest First)
+                                </option>
+                                <option value="interview_date" {% if sort_by == 'interview_date' %}selected{% endif %}>
+                                    <i class="bi bi-calendar-event"></i> Interview Date
+                                </option>
+                                <option value="location" {% if sort_by == 'location' %}selected{% endif %}>
+                                    <i class="bi bi-geo-alt"></i> Location (A-Z)
+                                </option>
+                            </select>
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary w-100">
-                                <i class="bi bi-search me-1"></i>Search
+                                <i class="bi bi-funnel me-1"></i>Apply
                             </button>
                         </div>
-                        <div class="col-md-2">
-                            <a href="{% url 'applied_jobs' %}" class="btn btn-outline-secondary w-100">
-                                <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                        <div class="col-md-1">
+                            <a href="{% url 'applied_jobs' %}" class="btn btn-outline-secondary w-100" title="Reset filters">
+                                <i class="bi bi-arrow-clockwise"></i>
                             </a>
                         </div>
                     </form>
@@ -47,7 +67,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <a href="{% url 'export_applied_jobs_excel' %}?q={{ query }}" 
+            <a href="{% url 'export_applied_jobs_excel' %}?q={{ query }}&sort={{ sort_by }}" 
                class="btn btn-success w-100 py-3">
                 <i class="bi bi-download me-2"></i>Export to Excel
             </a>
@@ -55,6 +75,30 @@
     </div>
 
     {% if applications %}
+        <!-- Results Info -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Showing {{ applications|length }} application{{ applications|length|pluralize }}
+                        {% if query %} for "{{ query }}"{% endif %}
+                    </span>
+                    <span class="badge bg-primary">
+                        <i class="bi bi-sort-down me-1"></i>
+                        Sorted by: 
+                        {% if sort_by == 'interview_date' %}
+                            Interview Date
+                        {% elif sort_by == 'location' %}
+                            Location
+                        {% else %}
+                            Application Date
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
         <!-- Applications Grid -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for app in applications %}
@@ -170,4 +214,16 @@
     border-radius: 0 0 50px 50px;
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form when sort dropdown changes
+    const sortSelect = document.getElementById('sort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+    }
+});
+</script>
 {% endblock %}

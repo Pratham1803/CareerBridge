@@ -14,8 +14,8 @@
 </div>
 
 <div class="container">
-    <!-- Search Section -->
-    <div class="row justify-content-center mb-5">
+    <!-- Search and Export Section -->
+    <div class="row mb-4">
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
@@ -45,6 +45,12 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="col-lg-4">
+            <a href="{% url 'export_companies_excel' %}?q={{ query }}" 
+               class="btn btn-success w-100 py-3">
+                <i class="bi bi-download me-2"></i>Export to Excel
+            </a>
         </div>
     </div>
 
@@ -164,10 +170,4 @@
     border-radius: 0 0 50px 50px;
 }
 </style>
-{% comment %} {% endblock %} {% endcomment %}
-        <a href="{% url 'export_companies_excel' %}?q={{ query }}" class="btn btn-success mb-3 float-end">
-    ⬇️ Export Companies to Excel
-</a>
-
-</div>
 {% endblock %}

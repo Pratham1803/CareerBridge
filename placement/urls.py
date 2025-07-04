@@ -8,7 +8,6 @@ urlpatterns = [
     path('applications/', views.applied_jobs, name='applied_jobs'),
     path('applications/<int:application_id>/withdraw/', views.withdraw_application, name='withdraw_application'),
     path('export/companies/', views.export_companies_excel, name='export_companies_excel'),
-path('export/applied/', views.export_applied_jobs_excel, name='export_applied_jobs_excel'),
-
-
+    path('export/applied/', views.export_applied_jobs_excel, name='export_applied_jobs_excel'),
+    path('admin/send-reminders/', views.send_interview_reminders_view, name='send_interview_reminders'),
 ]
