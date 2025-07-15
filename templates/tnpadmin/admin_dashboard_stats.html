@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - Placement Stats | CareerBridge{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <!-- Static Sidebar with Stats Cards -->
+        <div class="sticky-top" style="top: 80px;">
+            <div class="mb-4">
+                <div class="card text-center mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Students</h5>
+                        <h2 class="fw-bold">{{ total_students }}</h2>
+                    </div>
+                </div>
+                <div class="card text-center mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Placed Students</h5>
+                        <h2 class="fw-bold text-success">{{ placed_students }}</h2>
+                    </div>
+                </div>
+                <div class="card text-center mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Unplaced Students</h5>
+                        <h2 class="fw-bold text-danger">{{ unplaced_students }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="page-header mb-4">
+            <h1 class="text-gradient">Placement Dashboard</h1>
+            <p>Visualize placement statistics and download reports.</p>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Placed vs Unplaced Students</h5>
+                        <canvas id="placementPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Department-wise Placement Stats</h5>
+                        <canvas id="departmentBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>Department-wise Placement Table</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Department</th>
+                                <th>Total Students</th>
+                                <th>Placed Students</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in dept_stats %}
+                            <tr>
+                                <td>{{ stat.department }}</td>
+                                <td>{{ stat.total }}</td>
+                                <td>{{ stat.placed }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3" class="text-center">No department data found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="text-end mb-4">
+            <a href="{% url 'admin_export_report_excel' %}" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i>Download Excel Report</a>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        const pieCtx = document.getElementById('placementPieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Placed', 'Unplaced'],
+                datasets: [{
+                    data: [{{ placed_students }}, {{ unplaced_students }}],
+                    backgroundColor: ['#4facfe', '#f5576c'],
+                }]
+            },
+            options: {responsive: true}
+        });
+        const barCtx = document.getElementById('departmentBarChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for stat in dept_stats %}'{{ stat.department }}',{% endfor %}],
+                datasets: [{
+                    label: 'Placed',
+                    data: [{% for stat in dept_stats %}{{ stat.placed }},{% endfor %}],
+                    backgroundColor: '#4facfe',
+                }, {
+                    label: 'Total',
+                    data: [{% for stat in dept_stats %}{{ stat.total }},{% endfor %}],
+                    backgroundColor: '#f5576c',
+                }]
+            },
+            options: {responsive: true}
+        });
+        </script>
+    </div>
+</div>
+{% endblock %}

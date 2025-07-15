@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Selected Students{% endblock %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Selected Students</title>
+    <link rel="stylesheet" href="{% static 'css/admin_style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            margin-right: 10px;
+            padding: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Selected Students</h1>
+
+<form method="get">
+    <label for="company">Filter by Company:</label>
+    <select name="company" id="company">
+        <option value="">All</option>
+        {% for company in companies %}
+            <option value="{{ company.name }}" {% if request.GET.company == company.name %}selected{% endif %}>
+                {{ company.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="program">Filter by Program:</label>
+    <select name="program" id="program">
+        <option value="">All</option>
+        {% for prog in programs %}
+            <option value="{{ prog }}" {% if request.GET.program == prog %}selected{% endif %}>
+                {{ prog }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Email</th>
+            <th>Program</th>
+            <th>Selected By</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in selected_students %}
+            <tr>
+                <td>{{ student.username }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.profile.program|default:"N/A" }}</td>
+                <td>
+                    {% if student.selected_companies %}
+                        <ul>
+                            {% for company in student.selected_companies %}
+                                <li>{{ company.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No students found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
+{% endblock %}

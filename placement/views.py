@@ -3,11 +3,6 @@ from .models import Company, JobApplication
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Case, When, Value, IntegerField
-from django.contrib.admin.views.decorators import staff_member_required
-from django.core.management import call_command
-from django.http import JsonResponse
-from django.utils import timezone
-from datetime import timedelta
 import openpyxl
 from django.http import HttpResponse
 
@@ -194,73 +189,3 @@ def withdraw_application(request, application_id):
     messages.success(request, "Application withdrawn successfully.")
     
     return redirect('applied_jobs')
-
-@staff_member_required
-def send_interview_reminders_view(request):
-    """Admin view to manually trigger interview reminder emails"""
-    if request.method == 'POST':
-        try:
-            # Get the target date (2 days from now)
-            target_date = timezone.now().date() + timedelta(days=2)
-            
-            # Check if this is a dry run
-            dry_run = request.POST.get('dry_run') == 'on'
-            
-            if dry_run:
-                # Capture output from management command
-                from io import StringIO
-                import sys
-                
-                old_stdout = sys.stdout
-                sys.stdout = mystdout = StringIO()
-                
-                call_command('send_interview_reminders', '--dry-run')
-                
-                sys.stdout = old_stdout
-                output = mystdout.getvalue()
-                
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Dry run completed successfully',
-                    'output': output,
-                    'dry_run': True
-                })
-            else:
-                # Actually send emails
-                call_command('send_interview_reminders')
-                messages.success(request, f'Interview reminder emails have been sent for interviews on {target_date}')
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Emails sent successfully',
-                    'dry_run': False
-                })
-                
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'error': str(e)
-            })
-    
-    # GET request - show the form
-    target_date = timezone.now().date() + timedelta(days=2)
-    
-    # Get companies with interviews on target date
-    companies_with_interviews = Company.objects.filter(interview_date=target_date)
-    
-    # Get student counts for each company
-    companies_data = []
-    total_students = 0
-    
-    for company in companies_with_interviews:
-        student_count = JobApplication.objects.filter(company=company).count()
-        companies_data.append({
-            'company': company,
-            'student_count': student_count
-        })
-        total_students += student_count
-    
-    return render(request, 'placement/send_reminders.html', {
-        'target_date': target_date,
-        'companies_data': companies_data,
-        'total_students': total_students,
-    })

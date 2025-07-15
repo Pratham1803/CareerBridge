@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Admin - Placement Tracking | CareerBridge{% endblock %}
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="text-gradient">Placement Tracking</h1>
+    <p>Track which students applied to or were selected by companies. Use the toggle to mark a student as selected.</p>
+</div>
+<div class="card mb-4">
+    <div class="card-body">
+        <h5>Applied Students</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Student</th>
+                        <th>Company</th>
+                        <th>Date Applied</th>
+                        <th>Selected</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applied %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ app.student.username }}</td>
+                        <td>{{ app.company.name }}</td>
+                        <td>{{ app.date_applied|date:'d M Y, H:i' }}</td>
+                        <td>
+                            {% if app.selected %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'admin_toggle_selected' app.id %}">
+                                {% csrf_token %}
+                                {% if app.selected %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Unselect</button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-sm btn-outline-success">Select</button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center">No applications found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="card mb-4">
+    <div class="card-body">
+        <h5>Selected Students</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Student</th>
+                        <th>Company</th>
+                        <th>Interview Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applied %}
+                    {% if app.selected %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ app.student.username }}</td>
+                        <td>{{ app.company.name }}</td>
+                        <td>{{ app.company.interview_date|date:'d M Y' }}</td>
+                    </tr>
+                    {% endif %}
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center">No selected students found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

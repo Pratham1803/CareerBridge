@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+        th { background: #eee; }
+    </style>
+</head>
+<body>
+    <h2>Placement Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Student</th>
+                <th>Email</th>
+                <th>Batch</th>
+                <th>Company</th>
+                <th>Date Applied</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ app.student.username }}</td>
+                <td>{{ app.student.email }}</td>
+                <td>{{ app.student.profile.batch|default:'' }}</td>
+                <td>{{ app.company.name }}</td>
+                <td>{{ app.date_applied|date:'d M Y' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -13,5 +13,6 @@ urlpatterns = [
 
     # Include app-specific URLs
     path('accounts/', include('account.urls')),
-    path('placement/', include('placement.urls')),
+    path('/', include('placement.urls')),
+    path('tnp/', include('tnpadmin.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

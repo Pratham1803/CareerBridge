@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Notify Students | CareerBridge{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Notify Students About Placement Drive</h4>
+                </div>
+                <div class="card-body">
+                    {% if message %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="company_id" class="form-label">Select Company</label>
+                            <select name="company_id" id="company_id" class="form-control" required>
+                                {% for company in companies %}
+                                    <option value="{{ company.id }}">{{ company.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Email Subject</label>
+                            <input type="text" name="subject" id="subject" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="body" class="form-label">Email Body</label>
+                            <textarea name="body" id="body" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-info">Send Notification</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

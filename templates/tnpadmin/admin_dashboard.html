@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | CareerBridge{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <!-- Sidebar with Navigation -->
+    <div class="col-lg-3">
+        <div class="sticky-top" style="top: 80px;">
+            <div class="list-group shadow-sm rounded-4 mb-4">
+                <a href="{% url 'admin_profile' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-person-badge fs-4 text-gradient"></i> Admin Profile
+                </a>
+                <a href="{% url 'admin_company_list' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-buildings fs-4 text-gradient"></i> Companies
+                </a>
+                <a href="{% url 'admin_student_list' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-people-fill fs-4 text-gradient"></i> Registered Students
+                </a>
+                <a href="{% url 'admin_selected_students' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-person-check-fill fs-4 text-gradient"></i> Selected Students
+                </a>
+                <a href="{% url 'admin_placement_tracking' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-bar-chart-fill fs-4 text-gradient"></i> Placement Tracking
+                </a>
+                <a href="{% url 'admin_notify_students' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-envelope-fill fs-4 text-gradient"></i> Notifications
+                </a>
+                <a href="{% url 'admin_report' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-file-earmark-bar-graph-fill fs-4 text-gradient"></i> Reports
+                </a>
+                <a href="{% url 'admin_dashboard_stats' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-pie-chart-fill fs-4 text-gradient"></i> Stats Dashboard
+                </a>
+                <a href="{% url 'admin_company_list' %}" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-funnel-fill fs-4 text-gradient"></i> Filters
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content Area -->
+    <div class="col-lg-9">
+        <div class="card border-0 shadow-lg rounded-4 mb-4">
+            <div class="card-body p-5 text-center">
+                <h1 class="text-gradient mb-3">Welcome, Admin!</h1>
+                <p class="lead mb-4">Manage companies, students, and placements efficiently. Use the sidebar to navigate between features or view quick stats above.</p>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4">
+                        <a href="{% url 'admin_report' %}" class="btn btn-lg btn-primary w-100 mb-2"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>View Reports</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'admin_dashboard_stats' %}" class="btn btn-lg btn-success w-100 mb-2"><i class="bi bi-pie-chart-fill me-2"></i>View Placement Stats</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} We can Add Highest Package, Lowest Package and Average Package {% endcomment %}
+    </div>
+</div>
+<style>
+.gradient-card-1 { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); }
+.gradient-card-2 { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+.gradient-card-3 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+</style>
+{% endblock %}
