@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
 from datetime import timedelta
-from .models import Company, JobApplication
+from .models import Company, JobApplication, Selection
 
 
 @admin.register(Company)
@@ -36,6 +36,7 @@ class CompanyAdmin(admin.ModelAdmin):
     get_reminder_status.short_description = "Reminder Status"
 
 
+
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):
     list_display = ['student', 'company', 'date_applied', 'get_interview_date']
@@ -50,3 +51,10 @@ class JobApplicationAdmin(admin.ModelAdmin):
         return "No interview date"
     
     get_interview_date.short_description = "Interview Date"
+
+# Register Selection model
+@admin.register(Selection)
+class SelectionAdmin(admin.ModelAdmin):
+    list_display = ['student', 'company', 'selected_on', 'remarks']
+    list_filter = ['selected_on', 'company__company_type']
+    search_fields = ['student__username', 'company__name']

@@ -6,7 +6,20 @@ from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from account.models import User
-from placement.models import Company, JobApplication
+from placement.models import Company, JobApplication, Selection
+
+@staff_member_required
+def admin_toggle_selected(request, app_id):
+    """Toggle selection status for a student's application to a company"""
+    application = get_object_or_404(JobApplication, id=app_id)
+    selection_exists = Selection.objects.filter(student=application.student, company=application.company).exists()
+    if selection_exists:
+        Selection.objects.filter(student=application.student, company=application.company).delete()
+        messages.success(request, f"{application.student.username} deselected for {application.company.name}.")
+    else:
+        Selection.objects.create(student=application.student, company=application.company)
+        messages.success(request, f"{application.student.username} selected for {application.company.name}.")
+    return redirect('admin_selected_students')
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -177,9 +190,10 @@ def admin_student_list(request):
     companies = Company.objects.all()
     programs = students.values_list('profile__program', flat=True).distinct() if hasattr(User, 'profile') else []
     # Annotate students with applied and selected companies
+    from placement.models import Selection
     for student in students:
         student.applied_companies = Company.objects.filter(jobapplication__student=student).distinct()
-        student.selected_companies = Company.objects.filter(jobapplication__student=student, jobapplication__selected=True).distinct()
+        student.selected_companies = Company.objects.filter(selection__student=student).distinct()
     return render(request, 'tnpadmin/admin_student_list.html', {
         'filtered_students': students,
         'companies': companies,
@@ -192,21 +206,20 @@ def admin_selected_students(request):
     program = request.GET.get('program')
 
     # Get students who have at least one selected application
+    from placement.models import Selection
     selected_students = User.objects.filter(
         role='student',
-        jobapplication__selected=True
+        selection__isnull=False
     ).distinct()
 
     if company_name:
         selected_students = selected_students.filter(
-            jobapplication__company__name=company_name,
-            jobapplication__selected=True
+            selection__company__name=company_name
         )
 
     if program:
-        selected_students = selected_students.filter(
-            profile__program=program
-        ) if hasattr(User, 'profile') else selected_students
+        # Filter manually since profile is a separate model
+        selected_students = [s for s in selected_students if hasattr(s, 'profile') and s.profile.program == program]
 
     companies = Company.objects.all()
     programs = selected_students.values_list('profile__program', flat=True).distinct() if hasattr(User, 'profile') else []
@@ -214,8 +227,7 @@ def admin_selected_students(request):
     # Attach selected companies directly to each student
     for student in selected_students:
         student.selected_companies = Company.objects.filter(
-            jobapplication__student=student,
-            jobapplication__selected=True
+            selection__student=student
         )
 
     return render(request, 'tnpadmin/admin_selected_students.html', {
@@ -397,10 +409,10 @@ def admin_export_report_pdf(request):
 def admin_profile(request):
     return render(request, 'accounts/admin_profile.html')
 
-@require_POST
-def admin_toggle_selected(request, app_id):
-    app = get_object_or_404(JobApplication, id=app_id)
-    app.selected = not app.selected
-    app.save()
-    messages.success(request, f"Selection status for {app.student.username} at {app.company.name} updated.")
-    return redirect('admin_placement_tracking')
+# @require_POST
+# def admin_toggle_selected(request, app_id):
+#     app = get_object_or_404(Selection, id=app_id)
+#     app.selected = not app.selected
+#     app.save()
+#     messages.success(request, f"Selection status for {app.student.username} at {app.company.name} updated.")
+#     return redirect('admin_placement_tracking')

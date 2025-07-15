@@ -37,6 +37,7 @@ class Company(models.Model):
         return self.name
 
 
+
 class JobApplication(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
@@ -47,3 +48,17 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return f"{self.student.username} → {self.company.name}"
+
+
+# New model to store selected students for companies
+class Selection(models.Model):
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    selected_on = models.DateTimeField(auto_now_add=True)
+    remarks = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ('student', 'company')
+
+    def __str__(self):
+        return f"{self.student.username} selected for {self.company.name}"

@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db.models import Q, Case, When, Value, IntegerField
 import openpyxl
 from django.http import HttpResponse
+from account.views import student_required
 
 @login_required
 def export_companies_excel(request):
@@ -94,6 +95,7 @@ def export_applied_jobs_excel(request):
 
 
 @login_required
+@student_required
 def company_list(request):
     """Display list of companies with search functionality"""
     query = request.GET.get('q', '')

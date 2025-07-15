@@ -94,13 +94,12 @@
                 <td>{{ student.email }}</td>
                 <td>{{ student.profile.program|default:"N/A" }}</td>
                 <td>
-                    {% if student.selected_companies %}
-                        <ul>
-                            {% for company in student.selected_companies %}
-                                <li>{{ company.name }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
+                    <ul>
+                        {% for company in student.selected_companies %}
+                            <li>{{ company.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% if not student.selected_companies %}
                         None
                     {% endif %}
                 </td>

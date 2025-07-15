@@ -24,7 +24,7 @@
             <div class="card border-0 text-center h-100" style="background: var(--success-gradient); color: white;">
                 <div class="card-body">
                     <i class="bi bi-building-check display-4 mb-3"></i>
-                    <h3 class="fw-bold mb-1">0</h3>
+                    <h3 class="fw-bold mb-1">{{ applications_count }}</h3>
                     <p class="mb-0">Applications Sent</p>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             <div class="card border-0 text-center h-100" style="background: var(--warning-gradient); color: #333;">
                 <div class="card-body">
                     <i class="bi bi-calendar-event display-4 mb-3"></i>
-                    <h3 class="fw-bold mb-1">0</h3>
+                    <h3 class="fw-bold mb-1">{{ upcoming_count }}</h3>
                     <p class="mb-0">Upcoming Interviews</p>
                 </div>
             </div>
@@ -42,7 +42,7 @@
             <div class="card border-0 text-center h-100" style="background: var(--secondary-gradient); color: white;">
                 <div class="card-body">
                     <i class="bi bi-clock-history display-4 mb-3"></i>
-                    <h3 class="fw-bold mb-1">0</h3>
+                    <h3 class="fw-bold mb-1">{{ pending_count }}</h3>
                     <p class="mb-0">Pending Responses</p>
                 </div>
             </div>
@@ -51,7 +51,7 @@
             <div class="card border-0 text-center h-100" style="background: var(--primary-gradient); color: white;">
                 <div class="card-body">
                     <i class="bi bi-trophy display-4 mb-3"></i>
-                    <h3 class="fw-bold mb-1">0</h3>
+                    <h3 class="fw-bold mb-1">{{ success_rate }}%</h3>
                     <p class="mb-0">Success Rate</p>
                 </div>
             </div>
@@ -92,14 +92,25 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="text-center py-4">
-                        <i class="bi bi-clock-history display-4 text-muted"></i>
-                        <h5 class="text-muted mt-3">No Recent Activity</h5>
-                        <p class="text-muted">Start applying to companies to see your activity here!</p>
-                        <a href="{% url 'company_list' %}" class="btn btn-primary">
-                            <i class="bi bi-plus-circle me-2"></i>Apply to Companies
-                        </a>
-                    </div>
+                    {% if recent_apps %}
+                        <ul class="list-group list-group-flush">
+                        {% for app in recent_apps %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-building me-2"></i>{{ app.company.name }}</span>
+                                <span class="badge bg-primary">{{ app.date_applied|date:"d M Y" }}</span>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-clock-history display-4 text-muted"></i>
+                            <h5 class="text-muted mt-3">No Recent Activity</h5>
+                            <p class="text-muted">Start applying to companies to see your activity here!</p>
+                            <a href="{% url 'company_list' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Apply to Companies
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -115,11 +126,22 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="text-center py-4">
-                        <i class="bi bi-calendar-x display-4 text-muted"></i>
-                        <h5 class="text-muted mt-3">No Upcoming Deadlines</h5>
-                        <p class="text-muted">You're all caught up! Keep checking for new opportunities.</p>
-                    </div>
+                    {% if upcoming_deadlines %}
+                        <ul class="list-group list-group-flush">
+                        {% for company in upcoming_deadlines %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-building me-2"></i>{{ company.name }}</span>
+                                <span class="badge bg-warning text-dark">Deadline: {{ company.application_deadline|date:"d M Y" }}</span>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x display-4 text-muted"></i>
+                            <h5 class="text-muted mt-3">No Upcoming Deadlines</h5>
+                            <p class="text-muted">You're all caught up! Keep checking for new opportunities.</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
