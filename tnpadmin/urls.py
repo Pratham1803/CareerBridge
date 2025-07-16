@@ -25,5 +25,5 @@ urlpatterns = [
     path('report/', views.admin_report, name='admin_report'),
     path('export-report-pdf/', views.admin_export_report_pdf, name='admin_export_report_pdf'),
     path('profile/', views.admin_profile, name='admin_profile'),
-    path('toggle-selected/<int:app_id>/', views.admin_toggle_selected, name='admin_toggle_selected'),
+    path('toggle-selected/<int:app_id>/', views.select_student_for_company, name='admin_toggle_selected'),
 ]

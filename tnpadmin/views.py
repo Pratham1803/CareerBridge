@@ -409,10 +409,17 @@ def admin_export_report_pdf(request):
 def admin_profile(request):
     return render(request, 'accounts/admin_profile.html')
 
-# @require_POST
-# def admin_toggle_selected(request, app_id):
-#     app = get_object_or_404(Selection, id=app_id)
-#     app.selected = not app.selected
-#     app.save()
-#     messages.success(request, f"Selection status for {app.student.username} at {app.company.name} updated.")
-#     return redirect('admin_placement_tracking')
+def select_student_for_company(request, app_id):
+    from placement.models import Selection, JobApplication, Company
+
+    app = get_object_or_404(JobApplication, id=app_id)
+    student_id = app.student.id
+    company_id = app.company.id
+    student = User.objects.get(id=student_id)
+    company = Company.objects.get(id=company_id)
+    # Mark as selected
+    Selection.objects.create(student=student, company=company)
+    # Discard other applications
+    JobApplication.objects.filter(student=student).exclude(company=company).delete()
+    messages.success(request, f"{student.username} selected for {company.name}. Other applications discarded.")
+    return redirect('admin_selected_students')
