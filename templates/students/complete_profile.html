@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% block title %}Complete Your Profile - CareerBridge{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
+                <div class="card-header text-center py-4" style="background: var(--primary-gradient); color: white;">
+                    <div class="floating-element">
+                        <i class="bi bi-person-lines-fill display-4 mb-3"></i>
+                        <h2 class="fw-bold mb-2">Complete Your Profile</h2>
+                        <p class="lead mb-0">Fill in your details to unlock placement opportunities</p>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <!-- Show error messages if any -->
+                        {% if errors %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            {{ errors }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Personal Information -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: var(--primary-gradient); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-person me-2"></i>Personal Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">First Name*</label>
+                                        <input type="text" name="first_name" class="form-control" required value="{{ profile.first_name|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Last Name*</label>
+                                        <input type="text" name="last_name" class="form-control" required value="{{ profile.last_name|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Student ID*</label>
+                                        <input type="text" name="student_id" class="form-control" required value="{{ profile.student_id|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Gender*</label>
+                                        <select name="gender" class="form-select" required>
+                                            <option value="">Select</option>
+                                            <option value="MALE" {% if profile.gender == 'MALE' %}selected{% endif %}>Male</option>
+                                            <option value="FEMALE" {% if profile.gender == 'FEMALE' %}selected{% endif %}>Female</option>
+                                            <option value="OTHER" {% if profile.gender == 'OTHER' %}selected{% endif %}>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Date of Birth*</label>
+                                        <input type="date" name="dob" class="form-control" required value="{{ profile.dob|date:'Y-m-d' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: var(--primary-gradient); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-envelope me-2"></i>Contact Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">College Email*</label>
+                                        <input type="email" name="email_college" class="form-control" required value="{{ profile.email_college|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Personal Email</label>
+                                        <input type="email" name="email_personal" class="form-control" value="{{ profile.email_personal|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Phone Number*</label>
+                                        <input type="text" name="phone_number" class="form-control" required value="{{ profile.phone_number|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">City*</label>
+                                        <input type="text" name="city" class="form-control" required value="{{ profile.city|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Permanent Address*</label>
+                                        <textarea name="permanent_address" class="form-control" rows="2" required>{{ profile.permanent_address|default_if_none:'' }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Academic Information -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: var(--primary-gradient); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-mortarboard me-2"></i>Academic Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold">10th Percentage</label>
+                                        <input type="number" step="0.01" name="tenth_percentage" class="form-control" value="{{ profile.tenth_percentage|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold">12th Percentage</label>
+                                        <input type="number" step="0.01" name="twelfth_percentage" class="form-control" value="{{ profile.twelfth_percentage|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold">Batch Year</label>
+                                        <input type="number" name="batch_year" class="form-control" value="{{ profile.batch_year|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Bachelor College</label>
+                                        <input type="text" name="bachelor_college" class="form-control" value="{{ profile.bachelor_college|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Bachelor Course</label>
+                                        <select name="bachelor_course" class="form-select">
+                                            <option value="">Select</option>
+                                            <option value="CS" {% if profile.bachelor_course == 'CS' %}selected{% endif %}>Computer Science</option>
+                                            <option value="IT" {% if profile.bachelor_course == 'IT' %}selected{% endif %}>Information Technology</option>
+                                            <option value="EC" {% if profile.bachelor_course == 'EC' %}selected{% endif %}>Electronics and Communication</option>
+                                            <option value="BCA" {% if profile.bachelor_course == 'BCA' %}selected{% endif %}>Bachelor of Computer Applications</option>
+                                            <option value="BScIT" {% if profile.bachelor_course == 'BScIT' %}selected{% endif %}>Bachelor of Science in IT</option>
+                                            <option value="OTHER" {% if profile.bachelor_course == 'OTHER' %}selected{% endif %}>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Bachelor CGPA</label>
+                                        <input type="number" step="0.01" name="bachelor_cgpa" class="form-control" value="{{ profile.bachelor_cgpa|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Active Backlogs</label>
+                                        <input type="number" name="active_backlogs" class="form-control" value="{{ profile.active_backlogs|default_if_none:'0' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Master College</label>
+                                        <input type="text" name="master_college" class="form-control" value="{{ profile.master_college|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Master Course</label>
+                                        <select name="master_course" class="form-select">
+                                            <option value="">Select</option>
+                                            <option value="MCA" {% if profile.master_course == 'MCA' %}selected{% endif %}>Master of Computer Applications</option>
+                                            <option value="MSIT" {% if profile.master_course == 'MSIT' %}selected{% endif %}>Master of Science in IT</option>
+                                            <option value="M.Tech" {% if profile.master_course == 'M.Tech' %}selected{% endif %}>Master of Technology</option>
+                                            <option value="OTHER" {% if profile.master_course == 'OTHER' %}selected{% endif %}>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Master CGPA</label>
+                                        <input type="number" step="0.01" name="master_cgpa" class="form-control" value="{{ profile.master_cgpa|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills & Online Profiles -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: var(--primary-gradient); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-stars me-2"></i>Skills & Online Profiles</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Skills</label>
+                                        <input type="text" name="skills" class="form-control" value="{% for skill in profile.skills.all %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                                        <small class="text-muted">Comma separated</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">LinkedIn URL</label>
+                                        <input type="url" name="linkedin_url" class="form-control" value="{{ profile.linkedin_url|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">GitHub URL</label>
+                                        <input type="url" name="github_url" class="form-control" value="{{ profile.github_url|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Portfolio URL</label>
+                                        <input type="url" name="portfolio_url" class="form-control" value="{{ profile.portfolio_url|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Placement Info -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: var(--primary-gradient); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-file-earmark-person me-2"></i>Placement Info</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label fw-bold">Resume Link</label>
+                                        <input type="url" name="resume_link" class="form-control" value="{{ profile.resume_link|default_if_none:'' }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold">Status</label>
+                                        <select name="status" class="form-select">
+                                            <option value="PENDING" {% if profile.status == 'PENDING' %}selected{% endif %}>Pending</option>
+                                            <option value="ACTIVE" {% if profile.status == 'ACTIVE' %}selected{% endif %}>Active</option>
+                                            <option value="PLACED" {% if profile.status == 'PLACED' %}selected{% endif %}>Placed</option>
+                                            <option value="INACTIVE" {% if profile.status == 'INACTIVE' %}selected{% endif %}>Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-bold">Can Apply</label>
+                                        <select name="can_apply" class="form-select">
+                                            <option value="True" {% if profile.can_apply %}selected{% endif %}>Yes</option>
+                                            <option value="False" {% if not profile.can_apply %}selected{% endif %}>No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6 offset-md-3">
+                                <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                    <i class="bi bi-save me-2"></i>Save Profile
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.form-label {
+    margin-bottom: .3rem;
+}
+.card {
+    transition: all 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

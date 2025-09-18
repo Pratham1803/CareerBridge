@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Admin Profile - CareerBridge{% endblock %}
+{% block content %}
+<h2>Welcome, {{ request.user.username }} (TPO)</h2>
+<p>You can manage students, companies, and other TPOs here.</p>
+
+<ul>
+  <li><a href="/students/manage/">Manage Students</a></li>
+  <li><a href="/companies/manage/">Manage Companies</a></li>
+  <li><a href="/accounts/create-tpo/">Add New TPO</a></li>
+</ul>
+{% endblock %}

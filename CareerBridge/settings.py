@@ -44,11 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'account',
-    'placement',
-    'tnpadmin'
+    'account',    
+    'applications',
+    'students',
+    'companies',
+    'dashboard',
+    'notifications',
 ]
-AUTH_USER_MODEL = 'account.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -155,6 +157,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'your-email@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your-app-password')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'CareerBridge <noreply@careerbridge.com>')
+
+AUTH_USER_MODEL = "account.CustomUser"
 
 # Alternative providers:
 # Outlook/Hotmail:
