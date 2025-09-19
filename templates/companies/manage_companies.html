@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manage Companies</h2>
+<a href="{% url 'create_company' %}">Add Company</a>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Company Name</th>
+    <th>HR Email</th>
+    <th>City</th>
+    <th>Created</th>
+  </tr>
+  {% for c in companies %}
+  <tr>
+    <td>{{ c.name }}</td>
+    <td>{{ c.hr_email }}</td>
+    <td>{{ c.city }}</td>
+    <td>{{ c.created_at|date:"Y-m-d" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}x

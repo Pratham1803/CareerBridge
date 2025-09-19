@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from .models import CustomUser
 from django.contrib.auth import authenticate, login, logout
+from companies.models import Company
 
 def logout_view(request):
     logout(request)
@@ -32,11 +33,15 @@ def redirect_user_by_role(user):
     elif user.role == "TPO":
         return redirect("tpo_dashboard")
     elif user.role == "COMPANY":
+        company = Company.objects.filter(user=user).first()
+        if company and company.status == "PENDING":
+            return redirect("complete_company_profile")
         return redirect("company_dashboard")
     elif user.role == "STUDENT":
         if hasattr(user, "studentprofile") and user.studentprofile.status == "PENDING":
             return redirect("complete_profile")
-        return redirect("student_dashboard")
+        return redirect("student_dashboard")            
+
     return redirect("login")  # fallback
 
 

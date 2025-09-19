@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Complete Company Profile</h2>
+<form method="post">
+  {% csrf_token %}
+
+  <h3>Basic Info</h3>
+  Company Name: <input type="text" name="name" value="{{ company.name }}"><br>
+  Website: <input type="url" name="website" value="{{ company.website }}"><br>
+  Industry Type: <input type="text" name="industry_type" value="{{ company.industry_type }}"><br>
+  City: <input type="text" name="city" value="{{ company.city }}"><br>
+  Address:<br>
+  <textarea name="address">{{ company.address }}</textarea><br>
+
+  <h3>HR / Contact Info</h3>
+  HR Name: <input type="text" name="hr_name" value="{{ company.hr_name }}"><br>
+  HR Email: <input type="email" name="hr_email" value="{{ company.hr_email }}"><br>
+  HR Contact: <input type="text" name="hr_contact" value="{{ company.hr_contact }}"><br>
+
+  <h3>Secondary Contacts (Optional)</h3>
+  Secondary Email: <input type="email" name="secondary_contact_email" value="{{ company.secondary_contact_email }}"><br>
+  Secondary Number: <input type="text" name="secondary_contact_number" value="{{ company.secondary_contact_number }}"><br>
+
+  <h3>Descriptions</h3>
+  Technical Description:<br>
+  <textarea name="technical_description">{{ company.technical_description }}</textarea><br>
+  Other Description:<br>
+  <textarea name="other_description">{{ company.other_description }}</textarea><br>
+
+  <h3>Preferences</h3>
+  <h3>Preferred Courses</h3>
+{% for code, name in COURSE_CHOICES %}
+  <input type="checkbox" name="preferred_courses" value="{{ code }}"
+    {% if code in company.preferred_courses %}checked{% endif %}>
+  {{ name }}<br>
+{% endfor %}
+
+  Hiring Type:
+  <select name="hiring_types">
+    <option value="FULLTIME" {% if company.hiring_types == "FULLTIME" %}selected{% endif %}>Full-time</option>
+    <option value="INTERNSHIP" {% if company.hiring_types == "INTERNSHIP" %}selected{% endif %}>Internship</option>
+    <option value="BOTH" {% if company.hiring_types == "BOTH" %}selected{% endif %}>Both</option>
+  </select><br>
+
+  <br>
+  <button type="submit">Save Profile</button>
+</form>
+
+{% endblock %}

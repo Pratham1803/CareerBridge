@@ -1,6 +1,13 @@
 from django.db import models
 # from django.contrib.auth.models import User
 
+COURSE_CHOICES = [
+    ("BTECH", "B.Tech"),
+    ("MCA", "MCA"),
+    ("MSIT", "MSIT"),
+]
+
+
 # Create your models here.
 class Skill(models.Model):
     name = models.CharField(max_length=100, unique=True)

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Company Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome {{ company.name }} HR 👋</h2>
+<p>Status: {{ company.status }}</p>
+<p>City: {{ company.city }}</p>
+<p>Industry: {{ company.industry_type }}</p>
+<p>HR Contact: {{ company.hr_contact }}</p>
+
+<a href="{% url 'complete_company_profile' %}">Edit Profile</a><br>
+<a href="{% url "create_job" %}">Post New Job</a><br>
+<a href="{% url "manage_jobs" %}">Manage Jobs</a><br>
+<a href="{% url 'logout' %}">Logout</a>
+
+{% endblock %}

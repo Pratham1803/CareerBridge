@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Manage Jobs</h2>
+<table border="1">
+  <tr>
+    <th>Title</th>
+    <th>Batch</th>
+    <th>CGPA</th>
+    <th>Deadline</th>
+    <th>Status</th>
+  </tr>
+  {% for job in jobs %}
+  <tr>
+    <td>{{ job.title }}</td>
+    <td>{{ job.batch_year }}</td>
+    <td>{{ job.min_cgpa }}</td>
+    <td>{{ job.application_deadline }}</td>
+    <td>{% if job.is_active %}Active{% else %}Closed{% endif %}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="5">No jobs posted yet.</td></tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

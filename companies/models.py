@@ -1,7 +1,9 @@
 from django.db import models
+from students.models import COURSE_CHOICES
 
 # Create your models here.
 class Company(models.Model):
+    user = models.OneToOneField("account.CustomUser", on_delete=models.CASCADE, null=True, blank=True)  # <-- allow null/blank
     name = models.CharField(max_length=255, unique=True)
     website = models.URLField(blank=True, null=True)
     industry_type = models.CharField(max_length=100, blank=True, null=True)  
@@ -22,7 +24,8 @@ class Company(models.Model):
     other_description = models.TextField(blank=True, null=True)       # Culture, perks, general notes
 
     # Placement Preferences
-    preferred_courses = models.CharField(max_length=255, blank=True, null=True)  
+    preferred_courses = models.CharField(max_length=255, blank=True, null=True)  # <-- ensure this is a simple CharField
+    
     hiring_types = models.CharField(max_length=50, choices=[
         ('INTERNSHIP', 'Internship'),
         ('FULLTIME', 'Full-time'),
@@ -35,6 +38,16 @@ class Company(models.Model):
     # Audit
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=[("PENDING", "Pending"), ("ACTIVE", "Active")],
+        default="PENDING"
+    )
+
+    def is_complete(self):
+        """Check if essential fields are filled"""
+        return all([self.name, self.city, self.address, self.hr_contact, self.technical_description])
 
     def __str__(self):
         return self.name
@@ -56,7 +69,8 @@ class Job(models.Model):
     ], default='FULLTIME')
 
     # Eligibility
-    eligible_courses = models.ManyToManyField('EligibleCourse')  # CS, IT, EC, MCA, etc.
+    eligible_courses = models.JSONField(default=list, blank=True)
+
     min_cgpa = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
     max_backlogs = models.IntegerField(default=0)
     batch_year = models.IntegerField()  # e.g., 2025 batch

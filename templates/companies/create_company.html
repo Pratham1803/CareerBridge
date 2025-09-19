@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Create Company{% endblock %}
+{% block content %}
+
+<h2>Create Company HR Account</h2>
+<form method="post">
+  {% csrf_token %}
+  Username: <input type="text" name="username" required><br>
+  HR Email: <input type="email" name="email" required><br>
+  Password: <input type="password" name="password" required><br>
+  Company Name: <input type="text" name="name" required><br>
+  <button type="submit">Create Company</button>
+</form>
+{% endblock %}
